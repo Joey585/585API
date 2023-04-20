@@ -1,3 +1,7 @@
+
+food-pics/*
+.DS_STORE
+
 # Logs
 logs
 *.log

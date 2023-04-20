@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Import Food Pictures</title>
+</head>
+<body>
+  <label for="food-pic">Food Picture</label>
+  <input id="food-pic" type="file" name="food-pic">
+  <label for="title">Title</label>
+  <input type="text" id="title" name="title">
+  <label for="tags">Tags (Seperate by space)</label>
+  <input id="tags">
+  <input type="submit" id="submit">
+  <br>
+  <p id="file_name"></p>
+  <progress id="progress_bar" value="0" max="100" style="width: 400px; visibility: hidden"></progress>
+  <p id="progress_status"></p>
+<script>
+  function uploadFile(file){
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("tags", document.getElementById("tags").value);
+
+    const ajax = new XMLHttpRequest();
+    ajax.upload.addEventListener("progress", progressHandler, false)
+    ajax.open("POST", "food.php")
+    ajax.send(formData);
+  }
+
+  function progressHandler(event){
+    const percent = Math.round((event.loaded / event.total ) * 100);
+    document.getElementById("progress_bar").value = percent;
+
+    if(percent === 100) document.getElementById("progress_status").innerText = "Upload Completed! Thank you for uploading.";
+    else {
+      document.getElementById("progress_status").innerText = `${percent}% uploaded...`
+    }
+  }
+
+  document.getElementById("food-pic").addEventListener("change", (event) => {
+    window.selectedFile = event.target.files[0];
+    document.getElementById("file_name").innerText = `Selected: ${window.selectedFile.name}`;
+  });
+
+  document.getElementById("submit").addEventListener("click", () => {
+    document.getElementById("progress_bar").style.visibility = "visible";
+    uploadFile(window.selectedFile)
+  })
+</script>
+
+</body>
+</html>
