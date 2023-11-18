@@ -54,7 +54,7 @@ const upload = multer({storage: pictureUpload})
 
 
 app.post("/upload", upload.single("file"), (req, res) => {
-    console.log(req.file)
+    if(!req.file) return res.status(400);
     res.json({data: "//" + req.headers.host + "/uploads/" + req.file.filename})
 });
 
